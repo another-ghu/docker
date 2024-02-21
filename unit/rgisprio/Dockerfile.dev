@@ -1,13 +1,14 @@
 #Минимальный образ nginx unit без установленных языковых модулей
 FROM debian:bookworm
 #debian 12 bookworm
+
 LABEL org.opencontainers.image.authors="another.mfj@yandex.ru"
 LABEL org.opencontainers.image.title="Rgisprio"
-LABEL org.opencontainers.image.description="Rgisprio for development"
+LABEL org.opencontainers.image.description="Image for development"
 LABEL org.opencontainers.image.url="https://hub.docker.com/r/lmrctt/rgisprio"
 LABEL org.opencontainers.image.source="https://github.com/another-ghu/docker/tree/main/unit/rgisprio"
 LABEL org.opencontainers.image.documentation="https://github.com/another-ghu/docker/tree/main/unit/rgisprio"
-LABEL org.opencontainers.image.version="dev-v0.1"
+LABEL org.opencontainers.image.version="dev"
 
 RUN <<Packages
 #
