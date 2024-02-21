@@ -1,0 +1,41 @@
+version: '3.6'
+services:
+  app:
+    image: 'gitlab/gitlab-ee:16.8.2-ee.0'
+    container_name: gitlab
+    restart: always
+    hostname: 'gitlab.rutmirror.ru'
+
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'https://gitlab.rutmirror.ru'
+        nginx['redirect_http_to_https'] = true
+        nginx['listen_port'] = 80
+        nginx['listen_https'] = false
+        nginx['proxy_set_headers'] = {"X-Forwarded-Proto" => "https", "X-Forwarded-Ssl" => "on"}
+        #        gitlab_rails['gitlab_shell_ssh_port'] = 80
+      # Add any other gitlab.rb configuration here, each on its own line
+    ports:
+      #      - '80:80'
+      #      - '443:443'
+      - '22:22'
+    volumes:
+      - './gitlab_config:/etc/gitlab'
+      - './gitlab_logs:/var/log/gitlab'
+      - './gitlab_data:/var/opt/gitlab'
+      - './gitlab_sys/fs/cgroup:/sys/fs/cgroup'
+    shm_size: '256m'
+    #    networks:
+    #      - gitlab-network
+
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.gitlab.rule=Host(`gitlab.rutmirror.ru`)"
+      - "traefik.http.services.gitlab.loadbalancer.server.port=80"
+      - "traefik.http.routers.gitlab.entrypoints=websecure"
+      - "traefik.http.routers.gitlab.tls.certresolver=letsencrypt"
+
+networks:
+  default:
+    external: true
+    name: docker-network
