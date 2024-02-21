@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="rgisprio/prod.Dockerfile: Compose Deployment" type="docker-deploy" factoryName="dockerfile" server-name="Docker">
+  <configuration default="false" name="rgisprio/latest.Dockerfile" type="docker-deploy" factoryName="dockerfile" server-name="Docker">
     <deployment type="dockerfile">
       <settings>
         <option name="imageTag" value="rgisprio:latest" />
@@ -16,7 +16,7 @@
         </option>
         <option name="commandLineOptions" value="&#10;--add-host host.docker.internal:host-gateway &#10;--rm&#10;" />
         <option name="showCommandPreview" value="true" />
-        <option name="sourceFilePath" value="nginx unit/rgisprio/prod.Dockerfile" />
+        <option name="sourceFilePath" value="nginx unit/rgisprio/latest.Dockerfile" />
         <option name="volumeBindings">
           <list>
             <DockerVolumeBindingImpl>
