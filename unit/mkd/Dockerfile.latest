@@ -38,6 +38,8 @@ RUN <<Packages
     php8.2-uuid                         \
     php8.2-mbstring                     \
     libphp8.2-embed                     \
+    php8.2-curl                         \
+    php8.2-xml                          \
     unit                                \
     unit-php
 
