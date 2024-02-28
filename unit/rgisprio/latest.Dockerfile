@@ -8,7 +8,7 @@ LABEL org.opencontainers.image.description="Image for production"
 LABEL org.opencontainers.image.url="https://hub.docker.com/r/lmrctt/rgisprio"
 LABEL org.opencontainers.image.source="https://github.com/another-ghu/docker/tree/main/unit/rgisprio"
 LABEL org.opencontainers.image.documentation="https://github.com/another-ghu/docker/tree/main/unit/rgisprio"
-LABEL org.opencontainers.image.version="prod"
+LABEL org.opencontainers.image.version="latest"
 
 RUN <<Packages
 #
