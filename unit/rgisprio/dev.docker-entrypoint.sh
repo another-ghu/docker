@@ -63,7 +63,7 @@ if [ "$1" = "unitd" ] || [ "$1" = "unitd-debug" ]; then
                     echo "$0: Git cloned."
                 else
                     echo "$0: Error cloning the repository."
-                    sleep 10
+                    return 1
                 fi
             fi
 
