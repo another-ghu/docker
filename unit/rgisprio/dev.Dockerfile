@@ -36,6 +36,7 @@ RUN <<Packages
     php8.2-mbstring                     \
     libphp8.2-embed                     \
     php8.2-xdebug                       \
+    git                                 \
     unit                                \
     unit-php
 
