@@ -45,13 +45,11 @@ RUN <<Packages
   rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/*.list
 Packages
 
+#Добавляем необходимые локальные файлы во временную директорию контейнера
+COPY /unit/rgisprio/dev.docker-entrypoint.sh /tmp
+
 RUN <<Configurations
 #
-# Скачиваем docker-entrypoint.sh и устанавливаем права на его исполнение
-# https://github.com/nginx/unit/tree/master/pkg/docker
-curl -o /usr/local/bin/docker-entrypoint.sh                                           \
-  https://raw.githubusercontent.com/nginx/unit/master/pkg/docker/docker-entrypoint.sh \
-  && chmod ugo+x /usr/local/bin/docker-entrypoint.sh
 
 # Создаем папку /docker-entrypoint.d и добавляем конфигурацию nginx unit unit.json
 mkdir /docker-entrypoint.d/
@@ -115,6 +113,9 @@ xdebug.start_with_request=yes
 xdebug.discover_client_host=0
 xdebug.client_host=host.docker.internal
 xDebug
+
+mv /tmp/dev.docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+chmod ugo+x /usr/local/bin/docker-entrypoint.sh
 
 #Перенаправляем вывод ошибок.
 #ln -sf /dev/stderr /var/log/unit.log
