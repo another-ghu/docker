@@ -1,0 +1,98 @@
+#Минимальный образ nginx unit без установленных языковых модулей
+FROM debian:bookworm
+#debian 12 bookworm
+
+LABEL org.opencontainers.image.authors="another.mfj@yandex.ru"
+LABEL org.opencontainers.image.title="php-8.2"
+LABEL org.opencontainers.image.description="Image for development"
+LABEL org.opencontainers.image.url="https://hub.docker.com/r/lmrctt/php"
+LABEL org.opencontainers.image.source="https://github.com/another-ghu/docker/tree/main/unit/php-8.2"
+LABEL org.opencontainers.image.documentation="https://github.com/another-ghu/docker/tree/main/unit/php-8.2"
+
+RUN <<Packages
+# add repositories and install pkg
+apt update  && apt -y install curl apt-transport-https gnupg2 lsb-release
+
+curl -o /usr/share/keyrings/nginx-keyring.gpg     \
+    https://unit.nginx.org/keys/nginx-keyring.gpg
+
+echo "deb [signed-by=/usr/share/keyrings/nginx-keyring.gpg]         \
+    https://packages.nginx.org/unit/debian/ `lsb_release -cs` unit" \
+    >> /etc/apt/sources.list.d/unit.list
+echo "deb-src [signed-by=/usr/share/keyrings/nginx-keyring.gpg]     \
+    https://packages.nginx.org/unit/debian/ `lsb_release -cs` unit" \
+    >> /etc/apt/sources.list.d/unit.list
+echo "deb http://deb.debian.org/debian/ `lsb_release -cs` main"     \
+    >> /etc/apt/sources.list
+
+  apt update  && apt -y install         \
+    php8.2-common                       \
+    php8.2-cli                          \
+    php8.2-pgsql                        \
+    php8.2-zip                          \
+    php8.2-gd                           \
+    php8.2-uuid                         \
+    php8.2-mbstring                     \
+    libphp8.2-embed                     \
+    php8.2-xdebug                       \
+    unit                                \
+    unit-php
+
+apt remove -y           \
+    apt-transport-https \
+    gnupg2              \
+    lsb-release
+apt autoremove --purge -y
+
+rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/*.list
+Packages
+
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+COPY /unit/php-8.2/docker-entrypoint.sh /tmp
+
+RUN <<Configurations
+# creating configuration files
+mkdir /docker-entrypoint.d/
+cat << 'unit.json' > /docker-entrypoint.d/unit.json
+{
+    "listeners": {
+        "*:80": {
+            "pass": "applications/php_app"
+        }
+    },
+    "applications": {
+        "php_app": {
+            "type": "php",
+            "root": "/www/"
+        }
+    }
+}
+unit.json
+
+mkdir /www/
+cat << 'index.php' > /www/index.php
+<?php phpinfo();
+index.php
+
+# Добавляем конфигурацию xDebug
+cat << '99-xdebug.ini' > /etc/php/8.2/embed/conf.d/99-xdebug.ini
+xdebug.mode=develop, debug
+xdebug.start_with_request=yes
+xdebug.discover_client_host=0
+xdebug.client_host=host.docker.internal
+99-xdebug.ini
+
+mv /tmp/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+chmod ugo+x /usr/local/bin/docker-entrypoint.sh
+Configurations
+
+STOPSIGNAL SIGTERM
+
+# Пробрасываем порт в контейнер
+EXPOSE 80
+# Запускаем docker-entrypoint.sh при старте контейнера
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+# Запускаем nginx unit в нормальном режиме
+CMD ["unitd", "--no-daemon", "--control", "unix:/var/run/control.unit.sock"]
+# Запускаем nginx unit в debug режиме
+#CMD ["unitd-debug","--no-daemon","--control","unix:/var/run/control.unit.sock"]
