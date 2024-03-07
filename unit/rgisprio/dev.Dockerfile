@@ -26,7 +26,7 @@ RUN <<Packages
     >> /etc/apt/sources.list.d/unit.list
 
 # Устанавливаем необходимые пакеты
-  apt update  && apt -y install \
+  apt update  && apt -y install         \
     php8.2-common                       \
     php8.2-cli                          \
     php8.2-pgsql                        \
@@ -34,6 +34,7 @@ RUN <<Packages
     php8.2-gd                           \
     php8.2-uuid                         \
     php8.2-mbstring                     \
+    php8.2-xml                          \
     libphp8.2-embed                     \
     php8.2-xdebug                       \
     git                                 \
