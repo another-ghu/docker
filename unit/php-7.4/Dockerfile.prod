@@ -3,7 +3,7 @@ FROM debian:bullseye
 
 LABEL org.opencontainers.image.authors="another.mfj@yandex.ru"
 LABEL org.opencontainers.image.title="php-7.4"
-LABEL org.opencontainers.image.description="Image for development"
+LABEL org.opencontainers.image.description="Image for production"
 LABEL org.opencontainers.image.url="https://hub.docker.com/r/lmrctt/php"
 LABEL org.opencontainers.image.source="https://github.com/another-ghu/docker/tree/main/unit/php-7.4"
 LABEL org.opencontainers.image.documentation="https://github.com/another-ghu/docker/tree/main/unit/php-7.4"
@@ -33,25 +33,19 @@ apt update && apt install -y            \
     php7.4-uuid                         \
     php7.4-mbstring                     \
     libphp7.4-embed                     \
-    php7.4-dev                          \
     unit                                \
     unit-php
-
-pecl channel-update pecl.php.net
-pecl install xdebug-3.1.0
 
 apt remove -y           \
     apt-transport-https \
     gnupg2              \
-    lsb-release         \
-    php7.4-dev
+    lsb-release
 
 apt autoremove --purge -y
 
 rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/*.list
 Packages
 
-COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 COPY /unit/php-7.4/docker-entrypoint.sh /tmp
 
 RUN <<Configurations
@@ -77,14 +71,6 @@ mkdir /www/
 cat << 'index.php' > /www/index.php
 <?php phpinfo();
 index.php
-
-echo "zend_extension = xdebug" >> /etc/php/7.4/embed/php.ini
-cat << '99-xdebug.ini' > /etc/php/7.4/embed/conf.d/99-xdebug.ini
-xdebug.mode=develop, debug
-xdebug.start_with_request=yes
-xdebug.discover_client_host=0
-xdebug.client_host=host.docker.internal
-99-xdebug.ini
 
 mv /tmp/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 chmod ugo+x /usr/local/bin/docker-entrypoint.sh
