@@ -41,25 +41,27 @@ apt update && apt install -y     \
     unit                         \
     unit-php
 
+pecl channel-update pecl.php.net
 pecl install xdebug-3.1.0
 
-apt remove -y         \
-  apt-transport-https \
-  gnupg2              \
-  lsb-release         \
-  php7.3-dev
+apt remove -y           \
+    apt-transport-https \
+    gnupg2              \
+    lsb-release         \
+    php7.3-dev
 
 apt autoremove --purge -y
 
 rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/*.list
 Packages
 
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 COPY /unit/php-7.3/docker-entrypoint.sh /tmp
 
 RUN <<Configurations
 # creating configuration files
 mkdir /docker-entrypoint.d/
-cat << 'Unit' > /docker-entrypoint.d/unit.json
+cat << 'unit.json' > /docker-entrypoint.d/unit.json
 {
     "listeners": {
         "*:80": {
@@ -73,12 +75,12 @@ cat << 'Unit' > /docker-entrypoint.d/unit.json
         }
     }
 }
-Unit
+unit.json
 
 mkdir /www/
-cat << 'Index' > /www/index.php
+cat << 'index.php' > /www/index.php
 <?php phpinfo();
-Index
+index.php
 
 echo "zend_extension = xdebug" >> /etc/php/7.3/embed/php.ini
 cat << '99-xdebug.ini' > /etc/php/7.3/embed/conf.d/99-xdebug.ini
