@@ -7,8 +7,8 @@
 
 Если вы хотите изменить конфигурацию Nginx-Unit, удалить или добавить дополнительные пакеты, вам необходимо самостоятельно изменить Dockerfile и собрать образ. Список пакетов в репозитории Debian доступен по адресу https://packages.debian.org/en/.
 
-Если дополнительные пакеты не требуются, готовые образы можно скачать с Docker Hub по ссылке https://hub.docker.com/repository/docker/lmrctt/php/general.
-Готовые образы делятся на 2 тега.
+Если дополнительные пакеты не требуются, готовые образы можно скачать с Docker Hub по ссылке https://hub.docker.com/repository/docker/lmrctt/rgisprio/general.
+
 * `lmrctt/rgisprio:dev` - С дополнительными инструментами для разработки и тестирования
 
 | Образ               | Базовый образ      | Список пакетов                                                                                                                                                                                                            |
@@ -20,7 +20,6 @@
 ```bash
 DOCKER_BUILDKIT=1 docker build -f dev.Dockerfile -t rgisprio:dev .
 ```
-
 # Run
 ### Клонирование репозитория внутрь контейнера
 <p>Для клонирования репозитория внутрь контейнера необходимо указать следующие обязательные переменные</p>
@@ -69,10 +68,7 @@ export RGISPRIO=$(docker run -p 81:80                   \
 --add-host host.docker.internal:host-gateway            \
 --rm                                                    \
 --name rgisprio.dev                                     \
-lmrctt/rgisprio:dev
-
-
-)
+lmrctt/rgisprio:dev)
 ```
 ### Описание ключей
 * `-p 81:80` - Прокидывает порт в контейнер.
