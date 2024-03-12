@@ -1,4 +1,3 @@
-#Минимальный образ nginx unit без установленных языковых модулей
 FROM debian:bookworm
 #debian 12 bookworm
 
@@ -8,7 +7,6 @@ LABEL org.opencontainers.image.description="Image for production"
 LABEL org.opencontainers.image.url="https://hub.docker.com/r/lmrctt/mkd"
 LABEL org.opencontainers.image.source="https://github.com/another-ghu/docker/tree/main/unit/mkd"
 LABEL org.opencontainers.image.documentation="https://github.com/another-ghu/docker/tree/main/unit/mkd"
-LABEL org.opencontainers.image.version="latest"
 
 #Добавляем composer
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
@@ -107,8 +105,8 @@ Unit
 # Создаем папку /www и добавляем стартовый index.php
 mkdir /www/
 cat << 'Index' > /www/index.php
-<?php phpinfo();' >
-
+<?php
+phpinfo();
 Index
 
 #Перенаправляем вывод ошибок.
