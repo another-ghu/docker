@@ -69,7 +69,8 @@ unit.json
 
 mkdir /www/
 cat << 'index.php' > /www/index.php
-<?php phpinfo();
+<?php
+phpinfo();
 index.php
 
 mv /tmp/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
