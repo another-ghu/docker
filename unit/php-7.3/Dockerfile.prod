@@ -55,7 +55,7 @@ COPY /unit/php-7.3/docker-entrypoint.sh /tmp
 RUN <<Configurations
 # creating configuration files
 mkdir /docker-entrypoint.d/
-cat << 'Unit' > /docker-entrypoint.d/unit.json
+cat << 'unit.json' > /docker-entrypoint.d/unit.json
 {
     "listeners": {
         "*:80": {
@@ -69,12 +69,13 @@ cat << 'Unit' > /docker-entrypoint.d/unit.json
         }
     }
 }
-Unit
+unit.json
 
 mkdir /www/
-cat << 'Index' > /www/index.php
-<?php phpinfo();
-Index
+cat << 'index.php' > /www/index.php
+<?php
+phpinfo();
+index.php
 
 mv /tmp/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 chmod ugo+x /usr/local/bin/docker-entrypoint.sh
