@@ -11,18 +11,14 @@
 Готовые образы делятся на 2 тега.
 * `lmrctt/rgisprio:dev` - С дополнительными инструментами для разработки и тестирования
 
-|          Образ          |   Базовый образ    | Список пакетов                                                                                                                                                                                              |
-|:-----------------------:|:------------------:|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| lmrctt/rgisprio:dev | debian 12 bookworm | php8.2-common <br/> php8.2-cli <br/> php8.2-pgsql <br/> php8.2-zip <br/> php8.2-gd <br/> php8.2-uuid <br/> php8.2-mbstring <br/> php8.2-xml <br/> libphp8.2-embed <br/> php8.2-xdebug <br/> git <br/> unit <br/> unit-php|
+| Образ               | Базовый образ      | Список пакетов                                                                                                                                                                                                            |
+|:--------------------|:-------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| lmrctt/rgisprio:dev | debian 12 bookworm | php8.2-common <br/> php8.2-cli <br/> php8.2-pgsql <br/> php8.2-zip <br/> php8.2-gd <br/> php8.2-uuid <br/> php8.2-mbstring <br/> php8.2-xml <br/> libphp8.2-embed <br/> php8.2-xdebug <br/> git <br/> unit <br/> unit-php |
     
 # Build
 ### Команда сборки dev образа
 ```bash
 DOCKER_BUILDKIT=1 docker build -f dev.Dockerfile -t rgisprio:dev .
-```
-### Команда сборки prod образа
-```bash
-DOCKER_BUILDKIT=1 docker build -f latest.Dockerfile -t rgisprio:latest .
 ```
 
 # Run
@@ -47,7 +43,6 @@ lmrctt/rgisprio:dev)
 * `-p 81:80` - Прокидывает порт в контейнер.
 * `--rm` - удаляет контейнер после остановки.
 * `--name` - имя контейнера.
-
 ### Команда запуска контейнера dev с примонтированной папкой
 ```bash
 export RGISPRIO=$(docker run                 \
@@ -64,7 +59,6 @@ lmrctt/rgisprio:dev)
 * `--add-host host.docker.internal:host-gateway` - добавления пользовательского хоста в файл /etc/hosts контейнера. Это позволяет контейнеру видеть и использовать этот хост как локальный. Необходимо для корректной работы xDebug.
 * `--rm` - удаляет контейнер после остановки.
 * `--name` - имя контейнера.
-
 ### Команда запуска контейнера dev с клонированием репозитория и указанием папки с кодом
 ```bash
 export RGISPRIO=$(docker run -p 81:80                   \
@@ -75,9 +69,11 @@ export RGISPRIO=$(docker run -p 81:80                   \
 --add-host host.docker.internal:host-gateway            \
 --rm                                                    \
 --name rgisprio.dev                                     \
-lmrctt/rgisprio:dev)
-```
+lmrctt/rgisprio:dev
 
+
+)
+```
 ### Описание ключей
 * `-p 81:80` - Прокидывает порт в контейнер.
 * `--env GIT_LOGIN=dev` - имя пользователя git.
