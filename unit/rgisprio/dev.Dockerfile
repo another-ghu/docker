@@ -104,8 +104,8 @@ Unit
 # Создаем папку /www и добавляем стартовый index.php
 mkdir /www/
 cat << 'Index' > /www/index.php
-<?php phpinfo();' >
-
+<?php
+phpinfo();
 Index
 
 # Добавляем конфигурацию xDebug
