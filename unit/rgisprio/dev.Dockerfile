@@ -1,4 +1,3 @@
-#Минимальный образ nginx unit без установленных языковых модулей
 FROM debian:bookworm
 #debian 12 bookworm
 
@@ -55,7 +54,7 @@ RUN <<Configurations
 
 # Создаем папку /docker-entrypoint.d и добавляем конфигурацию nginx unit unit.json
 mkdir /docker-entrypoint.d/
-cat << 'Unit' > /docker-entrypoint.d/unit.json
+cat << 'unit.json' > /docker-entrypoint.d/unit.json
 {
     "listeners":
     {
@@ -99,22 +98,22 @@ cat << 'Unit' > /docker-entrypoint.d/unit.json
         }
     }
 }
-Unit
+unit.json
 
 # Создаем папку /www и добавляем стартовый index.php
 mkdir /www/
-cat << 'Index' > /www/index.php
+cat << 'index.php' > /www/index.php
 <?php
 phpinfo();
-Index
+index.php
 
 # Добавляем конфигурацию xDebug
-cat << 'xDebug' > /etc/php/8.2/embed/conf.d/99-xdebug.ini
+cat << '99-xdebug.ini' > /etc/php/8.2/embed/conf.d/99-xdebug.ini
 xdebug.mode=develop, debug
 xdebug.start_with_request=yes
 xdebug.discover_client_host=0
 xdebug.client_host=host.docker.internal
-xDebug
+99-xdebug.ini
 
 mv /tmp/dev.docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 chmod ugo+x /usr/local/bin/docker-entrypoint.sh
