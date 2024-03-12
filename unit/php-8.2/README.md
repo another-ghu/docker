@@ -13,23 +13,23 @@
 * `lmrctt/php:8.2-prod` - Без дополнительных инструментов для разработки и тестирования
 
 
-|Образ |   Базовый образ    | Список пакетов                                                                                                                                                                   |
-|:---:|:------------------:|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-|lmrctt/php:8.2-dev | debian 12 bookworm | php8.2-common <br/> php8.2-cli <br/> php8.2-pgsql <br/> php8.2-zip <br/> php8.2-gd <br/> php8.2-uuid <br/> php8.2-mbstring <br/> libphp8.2-embed <br/> php8.2-xdebug <br/> unit <br/> unit-php|
+| Образ              | Базовый образ|                                                                                         Список пакетов                                                                                         |
+|--------------------|--------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| lmrctt/php:8.2-dev | debian 12 bookworm | php8.2-common <br/> php8.2-cli <br/> php8.2-pgsql <br/> php8.2-zip <br/> php8.2-gd <br/> php8.2-uuid <br/> php8.2-mbstring <br/> libphp8.2-embed <br/> php8.2-xdebug <br/> unit <br/> unit-php |
 
 
-|        Образ        |   Базовый образ    | Список пакетов                                                                                                                                                                   |
-|:-------------------:|:------------------:|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| lmrctt/php:8.2-prod | debian 12 bookworm | php8.2-common <br/> php8.2-cli <br/> php8.2-pgsql <br/> php8.2-zip <br/> php8.2-gd <br/> php8.2-uuid <br/> php8.2-mbstring <br/> libphp8.2-embed <br/> unit <br/> unit-php|
+| Образ               | Базовый образ|                                                                               Список пакетов                                                                               |
+|---------------------|--------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| lmrctt/php:8.2-prod | debian 12 bookworm | php8.2-common <br/> php8.2-cli <br/> php8.2-pgsql <br/> php8.2-zip <br/> php8.2-gd <br/> php8.2-uuid <br/> php8.2-mbstring <br/> libphp8.2-embed <br/> unit <br/> unit-php |
 
 # Build
 ### Команда сборки dev образа
 ```bash
-DOCKER_BUILDKIT=1 docker build -f dev.Dockerfile -t rgisprio:dev .
+DOCKER_BUILDKIT=1 docker build -f dev.Dockerfile -t php:8.2-dev .
 ```
 ### Команда сборки prod образа
 ```bash
-DOCKER_BUILDKIT=1 docker build -f latest.Dockerfile -t rgisprio:latest .
+DOCKER_BUILDKIT=1 docker build -f latest.Dockerfile -t php:8.2-prod .
 ```
 
 # Run
