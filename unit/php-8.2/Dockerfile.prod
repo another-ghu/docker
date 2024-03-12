@@ -24,7 +24,7 @@ echo "deb-src [signed-by=/usr/share/keyrings/nginx-keyring.gpg]     \
 echo "deb http://deb.debian.org/debian/ `lsb_release -cs` main"     \
     >> /etc/apt/sources.list
 
-  apt update  && apt -y install         \
+apt update  && apt -y install           \
     php8.2-common                       \
     php8.2-cli                          \
     php8.2-pgsql                        \
