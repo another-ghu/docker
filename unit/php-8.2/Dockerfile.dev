@@ -1,4 +1,3 @@
-#Минимальный образ nginx unit без установленных языковых модулей
 FROM debian:bookworm
 #debian 12 bookworm
 
@@ -71,7 +70,8 @@ unit.json
 
 mkdir /www/
 cat << 'index.php' > /www/index.php
-<?php phpinfo();
+<?php
+phpinfo();
 index.php
 
 # Добавляем конфигурацию xDebug
