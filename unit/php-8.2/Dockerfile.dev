@@ -112,6 +112,9 @@ xdebug.client_host=host.docker.internal
 
 mv /tmp/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 chmod ugo+x /usr/local/bin/docker-entrypoint.sh
+
+#Перенаправление вывода
+ln -sf /dev/stderr /var/log/unit.log
 Configurations
 
 STOPSIGNAL SIGTERM
