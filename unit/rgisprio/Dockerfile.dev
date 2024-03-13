@@ -7,25 +7,22 @@ LABEL org.opencontainers.image.description="Image for development"
 LABEL org.opencontainers.image.url="https://hub.docker.com/r/lmrctt/rgisprio"
 LABEL org.opencontainers.image.source="https://github.com/another-ghu/docker/tree/main/unit/rgisprio"
 LABEL org.opencontainers.image.documentation="https://github.com/another-ghu/docker/tree/main/unit/rgisprio"
-LABEL org.opencontainers.image.version="dev"
 
 RUN <<Packages
-#
-#Обновляем списки репозиториев. Устанавливаем необходимые стартовые пакеты
-  apt update  && apt -y install \
-    curl apt-transport-https gnupg2 lsb-release
+# add repositories and install pkg
+apt update  && apt -y install curl apt-transport-https gnupg2 lsb-release
 
-#Добавляем репозитории nginx unit
-  curl -o /usr/share/keyrings/nginx-keyring.gpg https://unit.nginx.org/keys/nginx-keyring.gpg
-  echo "deb [signed-by=/usr/share/keyrings/nginx-keyring.gpg]       \
+curl -o /usr/share/keyrings/nginx-keyring.gpg     \
+    https://unit.nginx.org/keys/nginx-keyring.gpg
+
+echo "deb [signed-by=/usr/share/keyrings/nginx-keyring.gpg]         \
     https://packages.nginx.org/unit/debian/ `lsb_release -cs` unit" \
     >> /etc/apt/sources.list.d/unit.list
-  echo "deb-src [signed-by=/usr/share/keyrings/nginx-keyring.gpg]   \
+echo "deb-src [signed-by=/usr/share/keyrings/nginx-keyring.gpg]     \
     https://packages.nginx.org/unit/debian/ `lsb_release -cs` unit" \
     >> /etc/apt/sources.list.d/unit.list
 
-# Устанавливаем необходимые пакеты
-  apt update  && apt -y install         \
+apt update  && apt -y install           \
     php8.2-common                       \
     php8.2-cli                          \
     php8.2-pgsql                        \
@@ -40,19 +37,20 @@ RUN <<Packages
     unit                                \
     unit-php
 
-# Удаляем ненужные пакеты
-  apt remove apt-transport-https gnupg2 lsb-release && apt autoremove --purge -y
-# Удаляем ненужные пакеты c конфигурациями и удаляем списки репозиториев.
-  rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/*.list
+apt remove -y           \
+    apt-transport-https \
+    gnupg2              \
+    lsb-release
+apt autoremove --purge -y
+
+rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/*.list
 Packages
 
-#Добавляем необходимые локальные файлы во временную директорию контейнера
-COPY /unit/rgisprio/dev.docker-entrypoint.sh /tmp
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+COPY /unit/rgisprio/docker-entrypoint.sh /tmp
 
 RUN <<Configurations
-#
-
-# Создаем папку /docker-entrypoint.d и добавляем конфигурацию nginx unit unit.json
+# creating configuration files
 mkdir /docker-entrypoint.d/
 cat << 'unit.json' > /docker-entrypoint.d/unit.json
 {
@@ -83,24 +81,21 @@ cat << 'unit.json' > /docker-entrypoint.d/unit.json
         {
             "action":
             {
-                "pass": "applications/rgisprio"
+                "pass": "applications/app"
 
             },
         },
     ],
     "applications": {
-        "rgisprio": {
+        "app": {
             "type": "php",
             "root": "/www/",
             "index": "index.php",
-            "user": "www-data",
-            "group": "www-data"
         }
     }
 }
 unit.json
 
-# Создаем папку /www и добавляем стартовый index.php
 mkdir /www/
 cat << 'index.php' > /www/index.php
 <?php
@@ -115,11 +110,8 @@ xdebug.discover_client_host=0
 xdebug.client_host=host.docker.internal
 99-xdebug.ini
 
-mv /tmp/dev.docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+mv /tmp/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 chmod ugo+x /usr/local/bin/docker-entrypoint.sh
-
-#Перенаправляем вывод ошибок.
-#ln -sf /dev/stderr /var/log/unit.log
 Configurations
 
 STOPSIGNAL SIGTERM
