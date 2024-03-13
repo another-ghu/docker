@@ -77,11 +77,16 @@ cat << 'index.php' > /www/index.php
 phpinfo();
 index.php
 
+chmod -R 755 /www
+
 # php.ini Включение легаси поддержки для коротких тегов <?
 sed -i '/short_open_tag = Off/c short_open_tag = On' /etc/php/7.3/embed/php.ini
 
 mv /tmp/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 chmod ugo+x /usr/local/bin/docker-entrypoint.sh
+
+#Перенаправление вывода
+ln -sf /dev/stderr /var/log/unit.log
 Configurations
 
 STOPSIGNAL SIGTERM

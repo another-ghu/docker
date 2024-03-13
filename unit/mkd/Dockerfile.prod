@@ -103,8 +103,13 @@ cat << 'index.php' > /www/public/index.php
 phpinfo();
 index.php
 
+chmod -R 755 /www
+
 mv /tmp/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 chmod ugo+x /usr/local/bin/docker-entrypoint.sh
+
+#Перенаправление вывода
+ln -sf /dev/stderr /var/log/unit.log
 Configurations
 
 STOPSIGNAL SIGTERM

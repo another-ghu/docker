@@ -111,6 +111,8 @@ cat << 'index.php' > /www/index.php
 phpinfo();
 index.php
 
+chmod -R 755 /www
+
 echo "zend_extension = xdebug" >> /etc/php/7.3/embed/php.ini
 cat << '99-xdebug.ini' > /etc/php/7.3/embed/conf.d/99-xdebug.ini
 xdebug.mode=develop, debug
@@ -121,6 +123,9 @@ xdebug.client_host=host.docker.internal
 
 mv /tmp/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 chmod ugo+x /usr/local/bin/docker-entrypoint.sh
+
+#Перенаправление вывода
+ln -sf /dev/stderr /var/log/unit.log
 Configurations
 
 STOPSIGNAL SIGTERM
