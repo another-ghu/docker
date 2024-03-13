@@ -18,7 +18,7 @@
 # Build
 ### Команда сборки dev образа
 ```bash
-DOCKER_BUILDKIT=1 docker build -f dev.Dockerfile -t rgisprio:dev .
+DOCKER_BUILDKIT=1 docker build -f Dockerfile.dev -t rgisprio:dev .
 ```
 # Run
 ### Клонирование репозитория внутрь контейнера
