@@ -53,15 +53,43 @@ RUN <<Configurations
 mkdir /docker-entrypoint.d/
 cat << 'unit.json' > /docker-entrypoint.d/unit.json
 {
-    "listeners": {
-        "*:80": {
-            "pass": "applications/php_app"
-        }
+    "listeners":
+    {
+        "*:80":
+        {
+            "pass": "routes"
+        },
+        "*:443":
+        {
+            "pass": "routes"
+        },
     },
+
+    "routes":
+    [
+        {
+            "match":
+            {
+                "uri": "~\\.(css|gif|ico|jpg|js(on)?|png|svg|ttf|woff2?)$"
+            },
+            "action":
+            {
+                "share": "/www$uri"
+            },
+        },
+        {
+            "action":
+            {
+                "pass": "applications/app"
+
+            },
+        },
+    ],
     "applications": {
-        "php_app": {
+        "app": {
             "type": "php",
-            "root": "/www/"
+            "root": "/www/",
+            "index": "index.php",
         }
     }
 }
