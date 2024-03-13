@@ -23,11 +23,11 @@
 # Build
 ### Команда сборки dev образа
 ```bash
-DOCKER_BUILDKIT=1 docker build -f dev.Dockerfile -t php:7.4-dev .
+DOCKER_BUILDKIT=1 docker build -f Dockerfile.dev -t php:7.4-dev .
 ```
 ### Команда сборки prod образа
 ```bash
-DOCKER_BUILDKIT=1 docker build -f latest.Dockerfile -t php:7.4-prod .
+DOCKER_BUILDKIT=1 docker build -f Dockerfile.prod -t php:7.4-prod .
 ```
 # Run
 ### Клонирование репозитория внутрь контейнера
