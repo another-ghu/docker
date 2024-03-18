@@ -20,6 +20,7 @@
 ```bash
 DOCKER_BUILDKIT=1 docker build -f Dockerfile.dev -t rgisprio:dev .
 ```
+При сборке образа может появляться ошибка об отсутствии docker-entrypoint.sh - Проблема возникает из-за неверного пути к этому файлу.
 # Run
 ### Клонирование репозитория внутрь контейнера
 <p>Для клонирования репозитория внутрь контейнера необходимо указать следующие обязательные переменные</p>
@@ -34,9 +35,10 @@ DOCKER_BUILDKIT=1 docker build -f Dockerfile.dev -t rgisprio:dev .
 
 ### Базовая команда запуска контейнера dev
 ```bash
-export RGISPRIO=$(docker run -p 81:80 \
---rm                                  \
---name rgisprio.dev                   \
+export RGISPRIO=$(docker pull lmrctt/rgisprio:dev && docker run \
+-p 81:80                                                        \
+--rm                                                            \
+--name rgisprio.dev                                             \
 lmrctt/rgisprio:dev)
 ```
 * `-p 81:80` - Прокидывает порт в контейнер.
@@ -44,30 +46,31 @@ lmrctt/rgisprio:dev)
 * `--name` - имя контейнера.
 ### Команда запуска контейнера dev с примонтированной папкой
 ```bash
-export RGISPRIO=$(docker run                 \
--p 81:80                                     \
---mount type=bind,src="$(pwd)",dst=/www      \
---add-host host.docker.internal:host-gateway \
---rm                                         \
---name rgisprio.dev                          \
+export RGISPRIO=$(docker pull lmrctt/rgisprio:dev && docker run \
+-p 81:80                                                        \
+--mount type=bind,src=.,dst=/www                                \
+--add-host host.docker.internal:host-gateway                    \
+--rm                                                            \
+--name rgisprio.dev                                             \
 lmrctt/rgisprio:dev)
 ```
 ### Описание ключей
-* `-p 81:80` - Прокидывает порт в контейнер.
-* `--mount type=bind,src="$(pwd)",dst=/www` - монтирование текущей директории из которой производится запуск
-* `--add-host host.docker.internal:host-gateway` - добавления пользовательского хоста в файл /etc/hosts контейнера. Это позволяет контейнеру видеть и использовать этот хост как локальный. Необходимо для корректной работы xDebug.
+* `-p` - Прокидывает порт в контейнер.
+* `--mount` - монтирование текущей директории из которой производится запуск
+* `--add-host` - добавления пользовательского хоста в файл /etc/hosts контейнера. Это позволяет контейнеру видеть и использовать этот хост как локальный. Необходимо для корректной работы xDebug.
 * `--rm` - удаляет контейнер после остановки.
 * `--name` - имя контейнера.
 ### Команда запуска контейнера dev с клонированием репозитория и указанием папки с кодом
 ```bash
-export RGISPRIO=$(docker run -p 81:80                   \
---env GIT_LOGIN=dev                                     \
---env GIT_PASSWORD=changeme                             \
---env GIT_URL=https://github.com/another-ghu/docker.git \
---env GIT_DIR=/app/                                     \
---add-host host.docker.internal:host-gateway            \
---rm                                                    \
---name rgisprio.dev                                     \
+export RGISPRIO=$(docker pull lmrctt/rgisprio:dev && docker run \
+-p 81:80                                                        \
+--env GIT_LOGIN=dev                                             \
+--env GIT_PASSWORD=changeme                                     \
+--env GIT_URL=https://github.com/another-ghu/docker.git         \
+--env GIT_DIR=/app/                                             \
+--add-host host.docker.internal:host-gateway                    \
+--rm                                                            \
+--name rgisprio.dev                                             \
 lmrctt/rgisprio:dev)
 ```
 ### Описание ключей
