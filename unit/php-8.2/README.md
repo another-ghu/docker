@@ -9,9 +9,6 @@
 
 Если дополнительные пакеты не требуются, готовые образы можно скачать с Docker Hub по ссылке https://hub.docker.com/repository/docker/lmrctt/php/general.
 
-* `lmrctt/php:8.2-dev` - С дополнительными инструментами для разработки и тестирования
-* `lmrctt/php:8.2-prod` - Без дополнительных инструментов для разработки и тестирования
-
 | Образ              | Базовый образ      | Список пакетов                                                                                                                                                                                 |
 |:-------------------|:-------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | lmrctt/php:8.2-dev | debian 12 bookworm | php8.2-common <br/> php8.2-cli <br/> php8.2-pgsql <br/> php8.2-zip <br/> php8.2-gd <br/> php8.2-uuid <br/> php8.2-mbstring <br/> libphp8.2-embed <br/> php8.2-xdebug <br/> unit <br/> unit-php |
@@ -29,10 +26,10 @@ DOCKER_BUILDKIT=1 docker build -f Dockerfile.dev -t php:8.2-dev .
 ```bash
 DOCKER_BUILDKIT=1 docker build -f Dockerfile.prod -t php:8.2-prod .
 ```
+При сборке образа может появляться ошибка об отсутствии docker-entrypoint.sh - Проблема возникает из-за неверного пути к этому файлу.
 # Run
 ### Клонирование репозитория внутрь контейнера
 Для клонирования репозитория внутрь контейнера необходимо указать следующие обязательные переменные
-
 * `GIT_LOGIN` - логин пользователя (Обязательная переменная)
 * `GIT_PASSWORD` - пароль пользователя (Обязательная переменная)
 * `GIT_URL` - ссылка на репозиторий "https://github.com/another-ghu/docker.git" (Обязательная переменная)
@@ -42,34 +39,35 @@ DOCKER_BUILDKIT=1 docker build -f Dockerfile.prod -t php:8.2-prod .
 
 ### Базовая команда запуска контейнера dev
 ```bash
-export RGISPRIO=$(docker run -p 81:80 \
---rm                                  \
---name php-8.2.dev                    \
-lmrctt/php:8.2-dev)
+docker pull lmrctt/php:8.2-dev && docker run \
+-p 81:80                                     \
+--rm                                         \
+--name php-8.2.dev                           \
+lmrctt/php:8.2-dev
 ```
-* `-p 81:80` - Прокидывает порт в контейнер.
+* `-p` - Прокидывает порт в контейнер.
 * `--rm` - удаляет контейнер после остановки.
 * `--name` - имя контейнера.
 ### Команда запуска контейнера dev с примонтированной папкой
 ```bash
-export RGISPRIO=$(docker run                 \
+docker pull lmrctt/php:8.2-dev && docker run \
 -p 81:80                                     \
---mount type=bind,src="$(pwd)",dst=/www      \
+--mount type=bind,src=.,dst=/www             \
 --add-host host.docker.internal:host-gateway \
 --rm                                         \
 --name php-8.2.dev                           \
-lmrctt/php:8.2-dev)
+lmrctt/php:8.2-dev
 ```
 ### Описание ключей
-* `-p 81:80` - Прокидывает порт в контейнер.
-* `--mount type=bind,src="$(pwd)",dst=/www` - монтирование текущей директории из которой производится запуск
-* `--add-host host.docker.internal:host-gateway` - добавления пользовательского хоста в файл /etc/hosts контейнера. Это позволяет контейнеру видеть и использовать этот хост как локальный. Необходимо для корректной работы xDebug.
+* `-p` - Прокидывает порт в контейнер.
+* `--mount` - монтирование текущей директории из которой производится запуск
+* `--add-host` - добавления пользовательского хоста в файл /etc/hosts контейнера. Это позволяет контейнеру видеть и использовать этот хост как локальный. Необходимо для корректной работы xDebug.
 * `--rm` - удаляет контейнер после остановки.
 * `--name` - имя контейнера.
-
 ### Команда запуска контейнера dev с клонированием репозитория и указанием папки с кодом
 ```bash
-export RGISPRIO=$(docker run -p 81:80                   \
+docker pull lmrctt/php:8.2-dev && docker run            \
+-p 81:80                                                \
 --env GIT_LOGIN=dev                                     \
 --env GIT_PASSWORD=changeme                             \
 --env GIT_URL=https://github.com/another-ghu/docker.git \
@@ -77,13 +75,13 @@ export RGISPRIO=$(docker run -p 81:80                   \
 --add-host host.docker.internal:host-gateway            \
 --rm                                                    \
 --name php-8.2.dev                                      \
-lmrctt/php:8.2-dev)
+lmrctt/php:8.2-dev
 ```
 ### Описание ключей
-* `-p 81:80` - Прокидывает порт в контейнер.
-* `--env GIT_LOGIN=dev` - имя пользователя git.
-* `--env GIT_URL=https://github.com/another-ghu/docker.git` - адрес репозитория.
-* `--env GIT_DIR=/app/` - директория с кодом.
-* `--add-host host.docker.internal:host-gateway` - добавления пользовательского хоста в файл /etc/hosts контейнера. Это позволяет контейнеру видеть и использовать этот хост как локальный. Необходимо для корректной работы xDebug.
+* `-p` - Прокидывает порт в контейнер.
+* `--env GIT_LOGIN=` - имя пользователя git.
+* `--env GIT_URL=` - адрес репозитория.
+* `--env GIT_DIR=` - директория с кодом.
+* `--add-host` - добавления пользовательского хоста в файл /etc/hosts контейнера. Это позволяет контейнеру видеть и использовать этот хост как локальный. Необходимо для корректной работы xDebug.
 * `--rm` - удаляет контейнер после остановки.
 * `--name` - имя контейнера.

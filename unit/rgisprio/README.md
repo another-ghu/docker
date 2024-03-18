@@ -9,8 +9,6 @@
 
 Если дополнительные пакеты не требуются, готовые образы можно скачать с Docker Hub по ссылке https://hub.docker.com/repository/docker/lmrctt/rgisprio/general.
 
-* `lmrctt/rgisprio:dev` - С дополнительными инструментами для разработки и тестирования
-
 | Образ               | Базовый образ      | Список пакетов                                                                                                                                                                                                            |
 |:--------------------|:-------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | lmrctt/rgisprio:dev | debian 12 bookworm | php8.2-common <br/> php8.2-cli <br/> php8.2-pgsql <br/> php8.2-zip <br/> php8.2-gd <br/> php8.2-uuid <br/> php8.2-mbstring <br/> php8.2-xml <br/> libphp8.2-embed <br/> php8.2-xdebug <br/> git <br/> unit <br/> unit-php |
@@ -23,36 +21,34 @@ DOCKER_BUILDKIT=1 docker build -f Dockerfile.dev -t rgisprio:dev .
 При сборке образа может появляться ошибка об отсутствии docker-entrypoint.sh - Проблема возникает из-за неверного пути к этому файлу.
 # Run
 ### Клонирование репозитория внутрь контейнера
-<p>Для клонирования репозитория внутрь контейнера необходимо указать следующие обязательные переменные</p>
-
+Для клонирования репозитория внутрь контейнера необходимо указать следующие обязательные переменные
 * `GIT_LOGIN` - логин пользователя (Обязательная переменная)
 * `GIT_PASSWORD` - пароль пользователя (Обязательная переменная)
 * `GIT_URL` - ссылка на репозиторий "https://github.com/another-ghu/docker.git" (Обязательная переменная)
 
-<p>Опциональная переменная необходима в том случае, если кодовая база находится во вложенной папке</p>
-
+Опциональная переменная необходима в том случае, если кодовая база находится во вложенной папке
 * `GIT_DIR` - папка с кодом если находится во вложенной папке (Опциональная переменная)
 
 ### Базовая команда запуска контейнера dev
 ```bash
-export RGISPRIO=$(docker pull lmrctt/rgisprio:dev && docker run \
--p 81:80                                                        \
---rm                                                            \
---name rgisprio.dev                                             \
-lmrctt/rgisprio:dev)
+docker pull lmrctt/rgisprio:dev && docker run \
+-p 81:80                                      \
+--rm                                          \
+--name rgisprio.dev                           \
+lmrctt/rgisprio:dev
 ```
-* `-p 81:80` - Прокидывает порт в контейнер.
+* `-p` - Прокидывает порт в контейнер.
 * `--rm` - удаляет контейнер после остановки.
 * `--name` - имя контейнера.
 ### Команда запуска контейнера dev с примонтированной папкой
 ```bash
-export RGISPRIO=$(docker pull lmrctt/rgisprio:dev && docker run \
--p 81:80                                                        \
---mount type=bind,src=.,dst=/www                                \
---add-host host.docker.internal:host-gateway                    \
---rm                                                            \
---name rgisprio.dev                                             \
-lmrctt/rgisprio:dev)
+docker pull lmrctt/rgisprio:dev && docker run \
+-p 81:80                                      \
+--mount type=bind,src=.,dst=/www              \
+--add-host host.docker.internal:host-gateway  \
+--rm                                          \
+--name rgisprio.dev                           \
+lmrctt/rgisprio:dev
 ```
 ### Описание ключей
 * `-p` - Прокидывает порт в контейнер.
@@ -62,22 +58,22 @@ lmrctt/rgisprio:dev)
 * `--name` - имя контейнера.
 ### Команда запуска контейнера dev с клонированием репозитория и указанием папки с кодом
 ```bash
-export RGISPRIO=$(docker pull lmrctt/rgisprio:dev && docker run \
--p 81:80                                                        \
---env GIT_LOGIN=dev                                             \
---env GIT_PASSWORD=changeme                                     \
---env GIT_URL=https://github.com/another-ghu/docker.git         \
---env GIT_DIR=/app/                                             \
---add-host host.docker.internal:host-gateway                    \
---rm                                                            \
---name rgisprio.dev                                             \
-lmrctt/rgisprio:dev)
+docker pull lmrctt/rgisprio:dev && docker run           \
+-p 81:80                                                \
+--env GIT_LOGIN=dev                                     \
+--env GIT_PASSWORD=changeme                             \
+--env GIT_URL=https://github.com/another-ghu/docker.git \
+--env GIT_DIR=/app/                                     \
+--add-host host.docker.internal:host-gateway            \
+--rm                                                    \
+--name rgisprio.dev                                     \
+lmrctt/rgisprio:dev
 ```
 ### Описание ключей
-* `-p 81:80` - Прокидывает порт в контейнер.
-* `--env GIT_LOGIN=dev` - имя пользователя git.
-* `--env GIT_URL=https://github.com/another-ghu/docker.git` - адрес репозитория.
-* `--env GIT_DIR=/app/` - директория с кодом.
-* `--add-host host.docker.internal:host-gateway` - добавления пользовательского хоста в файл /etc/hosts контейнера. Это позволяет контейнеру видеть и использовать этот хост как локальный. Необходимо для корректной работы xDebug.
+* `-p` - Прокидывает порт в контейнер.
+* `--env GIT_LOGIN=` - имя пользователя git.
+* `--env GIT_URL=` - адрес репозитория.
+* `--env GIT_DIR=` - директория с кодом.
+* `--add-host` - добавления пользовательского хоста в файл /etc/hosts контейнера. Это позволяет контейнеру видеть и использовать этот хост как локальный. Необходимо для корректной работы xDebug.
 * `--rm` - удаляет контейнер после остановки.
 * `--name` - имя контейнера.
