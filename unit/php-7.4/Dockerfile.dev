@@ -107,7 +107,7 @@ cat << 'index.php' > /www/index.php
 phpinfo();
 index.php
 
-chmod -R 755 /www
+chmod -R 777 /www
 
 echo "zend_extension = xdebug" >> /etc/php/7.4/embed/php.ini
 cat << '99-xdebug.ini' > /etc/php/7.4/embed/conf.d/99-xdebug.ini

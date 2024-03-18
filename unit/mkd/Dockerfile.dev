@@ -105,7 +105,7 @@ cat << 'index.php' > /www/public/index.php
 phpinfo();
 index.php
 
-chmod -R 755 /www
+chmod -R 777 /www
 
 # Добавляем конфигурацию xDebug
 cat << '99-xdebug.ini' > /etc/php/8.2/embed/conf.d/99-xdebug.ini
