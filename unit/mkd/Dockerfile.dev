@@ -21,8 +21,6 @@ echo "deb [signed-by=/usr/share/keyrings/nginx-keyring.gpg]         \
 echo "deb-src [signed-by=/usr/share/keyrings/nginx-keyring.gpg]     \
     https://packages.nginx.org/unit/debian/ `lsb_release -cs` unit" \
     >> /etc/apt/sources.list.d/unit.list
-echo "deb http://deb.debian.org/debian/ `lsb_release -cs` main"     \
-    >> /etc/apt/sources.list
 
 apt update  && apt -y install           \
     php8.2-common                       \
@@ -93,12 +91,14 @@ cat << 'unit.json' > /docker-entrypoint.d/unit.json
                     "root": "/www/public/",
                     "script": "index.php"
                 }
+            },
+            "options": {
+                "file":"/etc/php/8.2/embed/php.ini"
             }
         }
     }
 }
 unit.json
-
 mkdir -p /www/public/
 cat << 'index.php' > /www/public/index.php
 <?php
