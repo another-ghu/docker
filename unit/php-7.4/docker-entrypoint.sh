@@ -20,6 +20,36 @@ curl_put()
     fi
     return 0
 }
+echo
+echo "$0: Looking for git variables..."
+echo
+if [ -n "${GIT_URL}" ] &&  [  -n "${GIT_LOGIN}" ] && [ -n "${GIT_PASSWORD}" ]; then
+    protocol=$(echo "$GIT_URL" | grep -oP '^https?')
+    host=$(echo "$GIT_URL" | grep -oP '//\K.*')
+    url="$protocol://$GIT_LOGIN:$GIT_PASSWORD@$host"
+
+    mkdir /repository && cd /repository
+
+    if git clone "$url" . > /dev/null 2>&1; then
+        if [ -n "$GIT_DIR" ]; then
+            mv /repository"$GIT_DIR"* /www
+        else
+            mv /repository/* /www
+        fi
+        echo "$0: Git cloned."
+    else
+        echo "$0: Error cloning the repository."
+        return 1
+    fi
+fi
+
+echo
+echo "$0: Looking for composer.json file..."
+echo
+if [ "$(find /www -maxdepth 1 -name composer.json)" ]; then
+    cd /www && composer install && composer dump-autoload
+fi
+
 
 if [ "$1" = "unitd" ] || [ "$1" = "unitd-debug" ]; then
     if /usr/bin/find "/var/lib/unit/" -mindepth 1 -print -quit 2>/dev/null | /bin/grep -q .; then
@@ -42,30 +72,6 @@ if [ "$1" = "unitd" ] || [ "$1" = "unitd-debug" ]; then
 
         if /usr/bin/find "/docker-entrypoint.d/" -mindepth 1 -print -quit 2>/dev/null | /bin/grep -q .; then
             echo "$0: /docker-entrypoint.d/ is not empty, applying initial configuration..."
-
-            echo "$0: Looking for git variables..."
-
-            if [ -n "${GIT_URL}" ] &&  [  -n "${GIT_LOGIN}" ] && [ -n "${GIT_PASSWORD}" ]; then
-                protocol=$(echo "$GIT_URL" | grep -oP '^https?')
-                host=$(echo "$GIT_URL" | grep -oP '//\K.*')
-                url="$protocol://$GIT_LOGIN:$GIT_PASSWORD@$host"
-
-                echo "$0: Required git variables is set, attempt cloning repository..."
-
-                mkdir /repository && cd /repository
-
-                if git clone "$url" . > /dev/null 2>&1; then
-                    if [ -n "$GIT_DIR" ]; then
-                        mv /repository"$GIT_DIR"* /www
-                    else
-                        mv /repository/* /www
-                    fi
-                    echo "$0: Git cloned."
-                else
-                    echo "$0: Error cloning the repository."
-                    return 1
-                fi
-            fi
 
             echo "$0: Looking for certificate bundles in /docker-entrypoint.d/..."
             for f in $(/usr/bin/find /docker-entrypoint.d/ -type f -name "*.pem"); do
@@ -122,6 +128,5 @@ if [ "$1" = "unitd" ] || [ "$1" = "unitd-debug" ]; then
         sleep 5
     fi
 fi
-
 
 exec "$@"
