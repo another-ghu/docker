@@ -10,7 +10,7 @@ LABEL org.opencontainers.image.documentation="https://github.com/another-ghu/doc
 
 RUN <<Packages
 # add repositories and install pkg
-apt update && apt install -y curl apt-transport-https gnupg2 lsb-release
+apt update && apt install -y curl unzip apt-transport-https gnupg2 lsb-release
 
 curl -o /usr/share/keyrings/nginx-keyring.gpg \
     https://unit.nginx.org/keys/nginx-keyring.gpg
