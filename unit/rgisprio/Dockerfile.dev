@@ -121,7 +121,8 @@ ln -sf /dev/stderr /var/log/unit.log
 Configurations
 
 STOPSIGNAL SIGTERM
-
+#Устанавливаем рабочую директорию
+WORKDIR /www
 # Пробрасываем порт в контейнер
 EXPOSE 80
 # Запускаем docker-entrypoint.sh при старте контейнера
