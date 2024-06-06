@@ -33,6 +33,7 @@ apt update && apt install -y            \
     php7.4-uuid                         \
     php7.4-mbstring                     \
     libphp7.4-embed                     \
+    php7.4-curl                         \
     unit                                \
     unit-php
 
@@ -46,7 +47,7 @@ apt autoremove --purge -y
 rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/*.list
 Packages
 
-COPY /unit/php-7.4/docker-entrypoint.sh /tmp
+COPY docker-entrypoint.sh /tmp
 
 RUN <<Configurations
 # creating configuration files
@@ -111,7 +112,8 @@ ln -sf /dev/stderr /var/log/unit.log
 Configurations
 
 STOPSIGNAL SIGTERM
-
+#Устанавливаем рабочую директорию
+WORKDIR /www
 # Пробрасываем порт в контейнер
 EXPOSE 80
 # Запускаем docker-entrypoint.sh при старте контейнера
