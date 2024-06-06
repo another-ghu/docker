@@ -34,6 +34,7 @@ apt update  && apt -y install           \
     php8.2-mbstring                     \
     libphp8.2-embed                     \
     php8.2-xdebug                       \
+    php8.2-curl                         \
     unit                                \
     unit-php
 
@@ -47,7 +48,7 @@ rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/*.list
 Packages
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
-COPY /unit/php-8.2/docker-entrypoint.sh /tmp
+COPY docker-entrypoint.sh /tmp
 
 RUN <<Configurations
 # creating configuration files
@@ -120,7 +121,8 @@ ln -sf /dev/stderr /var/log/unit.log
 Configurations
 
 STOPSIGNAL SIGTERM
-
+#Устанавливаем рабочую директорию
+WORKDIR /www
 # Пробрасываем порт в контейнер
 EXPOSE 80
 # Запускаем docker-entrypoint.sh при старте контейнера
