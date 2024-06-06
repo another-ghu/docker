@@ -56,7 +56,7 @@ rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/*.list
 Packages
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
-COPY /unit/php-7.3/docker-entrypoint.sh /tmp
+COPY docker-entrypoint.sh /tmp
 
 RUN <<Configurations
 # creating configuration files
@@ -129,7 +129,8 @@ ln -sf /dev/stderr /var/log/unit.log
 Configurations
 
 STOPSIGNAL SIGTERM
-
+#Устанавливаем рабочую директорию
+WORKDIR /www
 # Пробрасываем порт в контейнер
 EXPOSE 80
 # Запускаем docker-entrypoint.sh при старте контейнера
